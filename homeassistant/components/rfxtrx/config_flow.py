@@ -58,6 +58,7 @@ from .const import (
     CONST_VENETIAN_BLIND_MODE_DEFAULT,
     CONST_VENETIAN_BLIND_MODE_EU,
     CONST_VENETIAN_BLIND_MODE_US,
+    CONST_VENTIAN_BLIND_MODE_DDXXXX,
     DEVICE_PACKET_TYPE_LIGHTING4,
 )
 
@@ -294,6 +295,25 @@ class RfxtrxOptionsFlow(OptionsFlow):
                     ),
                 }
             )
+
+        if isinstance(self._selected_device_object.device, rfxtrxmod.DDxxxxDevice):
+            data_schema.update(
+                {
+                    vol.Optional(
+                        CONF_VENETIAN_BLIND_MODE,
+                        default=device_data.get(
+                            CONF_VENETIAN_BLIND_MODE,
+                            CONST_VENETIAN_BLIND_MODE_DEFAULT,
+                        ),
+                    ): vol.In(
+                        [
+                            CONST_VENETIAN_BLIND_MODE_DEFAULT,
+                            CONST_VENTIAN_BLIND_MODE_DDXXXX,
+                        ]
+                    ),
+                }
+            )
+
         replace_devices = {
             entry.id: entry.name_by_user if entry.name_by_user else entry.name
             for entry in self._device_entries
